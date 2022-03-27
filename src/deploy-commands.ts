@@ -1,17 +1,12 @@
-import { SlashCommandBuilder } from '@discordjs/builders'
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
 import dotenv from 'dotenv'
+import { getCommands } from './0-repositories/commands/CommandRepository'
 
 dotenv.config()
 
-export const deployCommands = () => {
-  const commands = [
-    new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
-    new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
-    new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
-  ]
-    .map(command => command.toJSON())
+export const deployCommands = async (): Promise<void> => {
+  const commands = getCommands().map(command => command.commandDesc.toJSON())
 
   const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN || '')
 
